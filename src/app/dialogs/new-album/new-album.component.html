@@ -1,0 +1,12 @@
+<form [formGroup]="albumForm" (ngSubmit)="createAlbum()" class="flex flex-column gap-3 mt-3">
+	<div>
+		<label for="album" class="block mb-1 text-color text-base">Album Name</label>
+		<span class="p-input-icon-left w-full">
+			<i class="pi pi-folder"></i>
+			<input formControlName="name" name="album" type="text" class="w-full" id="album" pInputText />
+		</span>
+	</div>
+	<div class="flex flex-row w-full justify-content-end">
+		<button pButton type="submit" class="w-min" label="Save" icon="pi pi-save"></button>
+	</div>
+</form>
