@@ -7,8 +7,8 @@ const routes: Routes = [
 	{
 		path: '',
 		component: GalleryComponent,
-		children: [{ path: 'album/:id', component: AlbumComponent }],
 	},
+	{ path: 'album/:id', component: AlbumComponent },
 	{ path: '**', component: GalleryComponent },
 ];
 

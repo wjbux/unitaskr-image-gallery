@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { Image } from '../../model/class/Image';
 import { ImageService } from '../../services/image/image.service';
 
 @Component({
@@ -14,10 +16,11 @@ export class NewImageComponent {
 	constructor(
 		private formBuilder: UntypedFormBuilder,
 		private imageService: ImageService,
-		public dialogRef: DynamicDialogRef,
-		public config: DynamicDialogConfig
+		private dialogRef: DynamicDialogRef,
+		private config: DynamicDialogConfig,
+		private messageService: MessageService
 	) {
-		const image: any = config.data;
+		const image: Image = config.data;
 		this.imageForm = this.formBuilder.group({
 			name: new UntypedFormControl(image.name, [Validators.required, Validators.maxLength(40)]),
 		});
@@ -26,8 +29,13 @@ export class NewImageComponent {
 	/**
 	 * Edit the image name
 	 */
-	public editImage(): void {
-		this.imageService.editImage({ ...this.config.data, ...this.imageForm.value });
+	public async editImage(): Promise<void> {
+		await this.imageService.editImage({ ...this.config.data, ...this.imageForm.value } as Image);
+		this.messageService.add({
+			severity: 'success',
+			summary: 'Image Successfully Edited',
+			detail: `${this.imageForm.get('name')?.value} has been edited.`,
+		});
 		this.dialogRef.close();
 	}
 }

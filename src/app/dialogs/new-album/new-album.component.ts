@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormControl, UntypedFormGroup, Validators } from '@angular/forms';
+import { MessageService } from 'primeng/api';
 import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { Album } from '../../model/class/Album';
 import { AlbumService } from '../../services/album/album.service';
 
 @Component({
@@ -14,10 +16,11 @@ export class NewAlbumComponent {
 	constructor(
 		private formBuilder: UntypedFormBuilder,
 		private albumService: AlbumService,
-		public dialogRef: DynamicDialogRef,
-		public config: DynamicDialogConfig
+		private dialogRef: DynamicDialogRef,
+		private config: DynamicDialogConfig,
+		private messageService: MessageService
 	) {
-		const album: any = config.data;
+		const album: Album = config.data;
 		this.albumForm = this.formBuilder.group({
 			name: new UntypedFormControl(album ? album.name : 'New Album', [
 				Validators.required,
@@ -29,11 +32,21 @@ export class NewAlbumComponent {
 	/**
 	 * Create or update the album
 	 */
-	public createAlbum(): void {
+	public async createAlbum(): Promise<void> {
 		if (this.config.data) {
-			this.albumService.editAlbum({ ...this.config.data, ...this.albumForm.value });
+			await this.albumService.editAlbum({ ...this.config.data, ...this.albumForm.value } as Album);
+			this.messageService.add({
+				severity: 'success',
+				summary: 'Album Successfully Edited',
+				detail: `${this.albumForm.get('name')?.value} has been edited.`,
+			});
 		} else {
-			this.albumService.createAlbum(this.albumForm.value);
+			await this.albumService.createAlbum(this.albumForm.value as Album);
+			this.messageService.add({
+				severity: 'success',
+				summary: 'Album Successfully Created',
+				detail: `${this.albumForm.get('name')?.value} has been created.`,
+			});
 		}
 		this.dialogRef.close();
 	}

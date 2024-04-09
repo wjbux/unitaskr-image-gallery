@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { NgModule, importProvidersFrom } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,6 +18,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ImageModule } from 'primeng/image';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
@@ -46,7 +48,6 @@ import { NewImageComponent } from './dialogs/new-image/new-image.component';
 import { GalleryComponent } from './gallery/gallery.component';
 import { AlbumService } from './services/album/album.service';
 import { ImageService } from './services/image/image.service';
-
 export const primeModules = [
 	AnimateModule,
 	BreadcrumbModule,
@@ -62,6 +63,8 @@ export const primeModules = [
 	DynamicDialogModule,
 	FileUploadModule,
 	ImageModule,
+	InputGroupAddonModule,
+	InputGroupModule,
 	InputNumberModule,
 	InputSwitchModule,
 	InputTextModule,
@@ -95,14 +98,7 @@ export const primeModules = [
 		HttpClientModule,
 		ReactiveFormsModule,
 	],
-	providers: [
-		ConfirmationService,
-		DialogService,
-		MessageService,
-		importProvidersFrom(HttpClientModule),
-		ImageService,
-		AlbumService,
-	],
+	providers: [ConfirmationService, DialogService, MessageService, ImageService, AlbumService],
 	bootstrap: [AppComponent],
 })
 export class AppModule {}

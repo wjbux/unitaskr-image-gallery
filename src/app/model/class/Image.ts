@@ -4,11 +4,11 @@ import { Album } from './Album';
  */
 export class Image {
 	public id?: number;
-	public name: string;
-	public dateCreated: number;
-	public s3PutObjectUrl: string;
-	public type: string;
-	public size: string;
-	public description: string;
+	public name?: string;
+	public dateCreated?: Date;
+	public dateUpdated?: Date;
+	public s3PutObjectUrl?: string;
+	public type?: string;
+	public size?: string;
 	public album?: Album;
 }
