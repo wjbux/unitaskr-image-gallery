@@ -48,6 +48,7 @@ import { NewImageComponent } from './dialogs/new-image/new-image.component';
 import { GalleryComponent } from './gallery/gallery.component';
 import { AlbumService } from './services/album/album.service';
 import { ImageService } from './services/image/image.service';
+
 export const primeModules = [
 	AnimateModule,
 	BreadcrumbModule,
