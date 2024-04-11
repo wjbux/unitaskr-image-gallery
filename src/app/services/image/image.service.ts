@@ -19,12 +19,27 @@ export class ImageService {
 	 * @returns list of images that satisfy the query
 	 */
 	public getImagesByAlbum(id: string, queryOptions?: ImageQueryOptions): Observable<Image[]> {
-		const sortParam: string = queryOptions?.sort ? `?sort=${queryOptions?.sort}` : '';
-		const limitParam: string = queryOptions?.limit ? `?limit=${queryOptions?.limit}` : '';
+		const takeParam: string = queryOptions?.take ? `?take=${queryOptions?.take}` : '';
+		const sortParam: string = queryOptions?.sort ? `&sort=${queryOptions?.sort}` : '';
+		const searchParam: string = queryOptions?.search ? `&search=${queryOptions?.search}` : '';
+		const skipParam: string = queryOptions?.skip ? `&skip=${queryOptions?.skip}` : '';
+		return this.httpClient.get(
+			`${environment.database.databaseURL}/albums/${id}/images${takeParam}${sortParam}${searchParam}${skipParam}`
+		) as Observable<Image[]>;
+	}
+
+	/**
+	 * Counts images for a given album
+	 * @param id id of the album the images lie in
+	 * @param queryOptions a query options object to add a string search for name, limit, or sort by date.
+	 *      Defaults to limit of 50 and returns oldest first
+	 * @returns list of images that satisfy the query
+	 */
+	public countImagesByAlbum(id: string, queryOptions?: ImageQueryOptions): Observable<string> {
 		const searchParam: string = queryOptions?.search ? `?search=${queryOptions?.search}` : '';
 		return this.httpClient.get(
-			`${environment.database.databaseURL}/albums/${id}/images${sortParam}${limitParam}${searchParam}`
-		) as Observable<Image[]>;
+			`${environment.database.databaseURL}/albums/${id}/count${searchParam}`
+		) as Observable<string>;
 	}
 
 	/**

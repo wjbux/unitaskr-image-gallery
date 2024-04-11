@@ -11,6 +11,7 @@ import { NewAlbumComponent } from '../dialogs/new-album/new-album.component';
 import { NewImageComponent } from '../dialogs/new-image/new-image.component';
 import { Album } from '../model/class/Album';
 import { Image } from '../model/class/Image';
+import { ImageQueryOptions } from '../model/class/ImageQueryOptions';
 import { AlbumService } from '../services/album/album.service';
 import { ImageService } from '../services/image/image.service';
 
@@ -24,7 +25,11 @@ export class AlbumComponent implements OnInit {
 	public images: Image[] = [];
 	public album: Album;
 	public selectedImage: Image;
-	public defaultRowResults: number = 12;
+	public totalImageCount: number;
+	public currentQuery: ImageQueryOptions = {
+		take: 6,
+		skip: 0,
+	};
 
 	public sortOptions: SelectItem[] = [
 		{ label: 'Oldest First', value: 'ASC' },
@@ -108,29 +113,27 @@ export class AlbumComponent implements OnInit {
 	 * @param event pagination event
 	 */
 	public async handlePageChange(event: DataViewPageEvent) {
-		// TODO: Implement pagination for increased efficiency
+		this.currentQuery.skip = event.first;
+		this.currentQuery.take = event.rows;
+		this.refreshImages();
 	}
 
 	/**
 	 * Handles a change event in the input field to update search
 	 * @param event event passed by input field
 	 */
-	public async searchImage(event: Event) {
-		this.images = await firstValueFrom<Image[]>(
-			this.imageService.getImagesByAlbum(`${this.album.id}`, {
-				search: (event.target as HTMLInputElement).value,
-			})
-		);
+	public searchImage(event: Event) {
+		this.currentQuery.search = (event.target as HTMLInputElement).value;
+		this.refreshImages();
 	}
 
 	/**
 	 * Handles a sort change event to refresh image results
 	 * @param event
 	 */
-	public async onSortChange(event: DropdownChangeEvent) {
-		this.images = await firstValueFrom<Image[]>(
-			this.imageService.getImagesByAlbum(`${this.album.id}`, { sort: event.value })
-		);
+	public onSortChange(event: DropdownChangeEvent) {
+		this.currentQuery.sort = event.value;
+		this.refreshImages();
 	}
 
 	/**
@@ -239,7 +242,13 @@ export class AlbumComponent implements OnInit {
 
 	// Refreshes the list of images
 	private async refreshImages() {
-		this.images = await firstValueFrom<Image[]>(this.imageService.getImagesByAlbum(`${this.album.id}`));
+		this.totalImageCount = Number(
+			await firstValueFrom<string>(this.imageService.countImagesByAlbum(`${this.album.id}`, this.currentQuery))
+		);
+
+		this.images = await firstValueFrom<Image[]>(
+			this.imageService.getImagesByAlbum(`${this.album.id}`, this.currentQuery)
+		);
 	}
 
 	// Refreshes the current album

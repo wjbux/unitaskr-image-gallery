@@ -42,9 +42,13 @@
 		<p-dataView
 			#dv
 			[value]="images"
-			[layout]="layout"
-			[rows]="defaultRowResults"
 			[paginator]="true"
+			[layout]="layout"
+			[totalRecords]="totalImageCount"
+			[rows]="currentQuery.take"
+			[first]="currentQuery.skip"
+			[lazy]="true"
+			[rowsPerPageOptions]="[6, 12, 24]"
 			(onPage)="handlePageChange($event)"
 		>
 			<ng-template pTemplate="header">

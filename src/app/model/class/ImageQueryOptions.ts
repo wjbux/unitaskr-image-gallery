@@ -3,6 +3,7 @@
  */
 export class ImageQueryOptions {
 	public sort?: string;
-	public limit?: number;
+	public take?: number;
 	public search?: string;
+	public skip?: number;
 }
